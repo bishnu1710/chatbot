@@ -1,7 +1,7 @@
 # app.py
 import streamlit as st
-from chatbot.retrieval_model import RetrievalModel
-from chatbot.generative import generate_gemini_text
+from retrieval_model import RetrievalModel
+from generative import generate_gemini_text
 import os
 import re
 
@@ -17,9 +17,28 @@ threshold = st.sidebar.slider("Retrieval confidence threshold", 0.0, 1.0, 0.35)
 
 # Emergency phrases - escalate immediately without sending to model
 EMERGENCY_PHRASES = [
-    "i want to end", "i want to die", "kill myself", "suicide", "i will kill myself",
-    "i will end my life", "ending it all", "i want to harm myself"
+    "i want to end", "i want to die", "kill myself", "suicide",
+    "i will kill myself", "i will end my life", "ending it all",
+    "i want to harm myself", "self harm", "end my life","suicide",
+    "die by suicide","suicide"
 ]
+
+# India-specific emergency helpline message
+EMERGENCY_MESSAGE = (
+    "I’m really concerned about your safety.\n\n"
+    "**If you are in India**, please reach out to one of these helplines right now:\n"
+    "- ☎️ AASRA: +91-9820466726 (24x7)\n"
+    "- ☎️ Vandrevala Foundation: 1860 2662 345 / +91-9999 666 555\n"
+    "- ☎️ iCall (TISS): +91-9152987821 (Mon–Sat, 8 AM–10 PM)\n"
+    "- ☎️ Snehi: +91-9582208181 (24x7)\n"
+    "- 🚨 National emergency: 112\n\n"
+    "You are not alone — help is available, please talk to someone."
+)
+
+def contains_emergency(text):
+    t = text.lower()
+    return any(phrase in t for phrase in EMERGENCY_PHRASES)
+
 
 def contains_emergency(text):
     t = text.lower()
@@ -52,12 +71,8 @@ if send_btn and user_input.strip():
     user_text = user_input.strip()
     # Emergency check
     if contains_emergency(user_text):
-        esc = (
-            "I’m really concerned about your safety. If you are in immediate danger, please call your local emergency number now.\n"
-            "If you are in the U.S., you can call or text 988. Please reach out to a trusted person or local emergency services right away."
-        )
         st.session_state.messages.append(("You", user_text))
-        st.session_state.messages.append(("Bot", esc))
+        st.session_state.messages.append(("Bot", EMERGENCY_MESSAGE))
     else:
         bot_reply = None
         if mode == "Retrieval":
