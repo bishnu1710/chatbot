@@ -9,8 +9,13 @@
      ```
    - Windows (PowerShell):
      ```
-     python -m venv .venv
-     .\.venv\Scripts\Activate.ps1
-     ```
-
+    py -3.10 -m venv .venv
+    .\.venv\Scripts\Activate.ps1
+   
 2. Install dependencies:
+   - Windows (PowerShell):
+    pip install -r requirements.txt
+3. Run:
+  - Windows (PowerShell):
+    python train_retrieval.py
+    streamlit run app.py
