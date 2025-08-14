@@ -1,4 +1,8 @@
-# Mental Health Chatbot (Retrieval + Gemini Flash)
+# 🧠 Mental Health Chatbot (Retrieval + Gemini Flash)
+
+A retrieval-based mental health chatbot powered by **Gemini Flash** for fast and empathetic responses.
+
+## 🚀 Quick Setup (Local, VS Code)
 
 ## Quick setup (local, VS Code)
 1. Create & activate venv
