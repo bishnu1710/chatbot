@@ -4,16 +4,19 @@ import random
 import joblib
 import os
 import numpy as np
+import re
+from spellchecker import SpellChecker
 
 MODEL_DIR = "models"
 INTENTS_PATH = "data/intents.json"
 
 class RetrievalModel:
-    def __init__(self, model_dir=MODEL_DIR, intents_path=INTENTS_PATH, threshold=0.35):
+    def __init__(self, model_dir=MODEL_DIR, intents_path=INTENTS_PATH, threshold=0.2):
         self.model_dir = model_dir
         self.intents_path = intents_path
         self.threshold = threshold
         self._loaded = False
+        self.spell = SpellChecker()
         self._load()
 
     def _load(self):
@@ -27,8 +30,16 @@ class RetrievalModel:
         # map tag -> responses
         self.responses_by_tag = {item["tag"]: item["responses"] for item in self.intents}
         self._loaded = True
-
+    def preprocess(self, text):
+        text = text.lower()
+        text = re.sub(r'[^\w\s]', '', text)
+        # Correct spelling word by word
+        words = text.split()
+        corrected_words = [self.spell.correction(w) or w for w in words]
+        return " ".join(corrected_words).strip()
+    
     def predict_tag(self, text):
+        text = self.preprocess(text)
         vec = self.vectorizer.transform([text]).toarray()
         probs = self.clf.predict_proba(vec)[0]
         idx = int(np.argmax(probs))
