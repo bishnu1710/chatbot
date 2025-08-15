@@ -15,7 +15,7 @@ A retrieval-based mental health chatbot powered by **Gemini Flash** for fast and
      ```
     py -3.10 -m venv .venv
     .\.venv\Scripts\Activate.ps1
-   
+      ```
 2. Install dependencies:
    - Windows (PowerShell):
     pip install -r requirements.txt
